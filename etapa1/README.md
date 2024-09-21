@@ -17,3 +17,15 @@ O parâmetro -h, geralmente usado como ajuda na maioria das CLI, também fornece
 ### Configuração
 
 Poderíamos modificar os arquivos de configuração no container, mas essas alterações seriam perdidas caso o container seja removido.
+
+## Dockerfile
+
+O dockerfile da etapa contém um conteúdo e uma configuração que vai além do comportamento padrão, servir o conteúdo na porta 8080.
+
+### Build
+
+Para executar o build do dockerfile execute o comando `docker build -t etapa1 .`
+
+A seguir, para executar a etapa, use `docker run --name nginx-test --rm -p 80:80 -p 8080:8080 etapa1`
+
+O container vai servir o html padrão na porta 80 e o html personalizado na porta 8080, conforme a configuração injetada no container.
