@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.27-alpine
     container_name: nginx_server
     ports:
       - "8080:80"
@@ -11,7 +11,7 @@ services:
       - php
 
   php:
-    image: danieldevop/php-para-glpi:8.2-fpm
+    image: danieldevop/php-para-glpi:8.2-fpm-alpine
     container_name: php_fpm
     volumes:
       - ./www:/var/www/html
