@@ -1,0 +1,65 @@
+services:
+  nginx:
+    image: nginx:1.27
+    container_name: nginx_server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    command: /bin/sh -c "
+      mkdir -p /var/www/glpi/marketplace && \
+      chown -R www-data:www-data /var/www/glpi/files /var/www/glpi/config /var/www/glpi/marketplace && \
+      chmod -R 775 /var/www/glpi/files /var/www/glpi/config /var/www/glpi/marketplace && \
+      nginx -g 'daemon off;'"
+    depends_on:
+      - php
+    networks:
+      - glpi-network
+
+  php:
+    image: danieldevop/php-para-glpi:8.2-fpm
+    container_name: php_fpm
+    volumes:
+      - ./www:/var/www
+    environment:
+      - PHP_FPM_USER=www-data
+      - PHP_FPM_GROUP=www-data
+    depends_on:
+      - db
+    networks:
+      - glpi-network
+  
+  db:
+    image: mysql:9
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: glpi
+      MYSQL_USER: glpi
+      MYSQL_PASSWORD: glpipassword
+    volumes:
+      - dados_glpi:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - glpi-network
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: phpmyadmin5
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: db
+    ports:
+      - "3000:80"
+    depends_on:
+      - db
+    networks:
+      - glpi-network
+
+networks:
+  glpi-network:
+
+volumes:
+  dados_glpi:

@@ -1,0 +1,8 @@
+FROM nginx
+
+WORKDIR /app
+
+COPY ./content .
+
+EXPOSE 80
+EXPOSE 8080
